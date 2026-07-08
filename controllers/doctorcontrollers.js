@@ -1,0 +1,73 @@
+const Doctor = require("../modal/Doctor");
+const jwt = require("jsonwebtoken")
+
+exports.addDoctor = async(req,res)=>{
+    try{
+     console.log(req.user)
+   if(req.user.role !== "AdminHospital"){
+    return res.status(403).json({
+        msg:"Doctor Add Only Admin Access"
+    })
+   };
+   const {name , email,phone,gender,age,specialization,experience} = req.body
+   console.log(req.body)
+   const hospitalId = req.user.hospitalId
+   const doctorexist = await Doctor.findOne({email,hospitalId});
+if(doctorexist){
+    return res.status(400).json({
+        msg:"Doctor allready add"
+    })
+}
+   const doctor = new Doctor({
+   name,email,phone,age,gender,
+   specialization,experience,hospitalId
+   })
+   await doctor.save()
+      res.status(200).json({
+    success:true,
+    msg:"Doctor Add Successfully"
+   })
+    }catch(err){
+    console.log(err)
+    return res.status(500).json({
+        msg:"Server error"
+    })
+    }
+}
+
+
+exports.editdoctor = async(req,res)=>{
+    try{
+    if(req.user.role !== "AdminHospital"){
+        return res.status(400).json({
+            msg:"Only Admin Access"
+        })
+    }
+const { name,email,phone,age,gender,specialization,experience} = req.body
+    const {id} = req.params
+    const doctors = await Doctor.findOne({_id:id,hospitalId:req.user.hospitalId})
+    if(!doctors){
+        return res.status(403).json({
+            msg:"Not Allowed"
+        })
+    }
+    const doctor = await Doctor.findByIdAndUpdate(id,{
+        name,email,phone,age,gender,specialization,experience,
+    },{new:true})
+
+    if(!doctor){
+        return res.status(404).json({
+            msg:"Doctor not found"
+        })
+    }
+  res.status(200).json({
+    success:true,
+    doctor
+  })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}

@@ -35,7 +35,7 @@ const hospitaladminregisterschema = Joi.object({
     .trim().required().hex()
     .messages({
         "string.empty":"Hospital Id required",
-        "string.hax":"hospital id must be valid mongodb objectid"
+        "string.hex":"hospital id must be valid mongodb objectid"
     })
 })
 

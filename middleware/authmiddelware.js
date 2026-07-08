@@ -12,6 +12,7 @@ const authmiddelware = async(req,res,next)=>{
     const token = authHeader.split(" ")[1];
     const tokendata = jwt.verify(token,JWT_SECRET);
      req.user = tokendata;
+     console.log(req.user);
      next()
 }catch(err){
     console.log("invalid tokan")
