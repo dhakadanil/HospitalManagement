@@ -9,16 +9,19 @@ const authRoutes = require("./route/authRoute");
 const hospitalRoute = require("./route/hospitalRoute")
 const hospitalAdminRoute = require("./route/hospitalAdminRoute")
 const doctorRoute = require("./route/doctorRoute")
+const patientRoute = require("./route/patientRouter")
 
 const SuperAdminModel  = require("./modal/SuperAdmin");
 const Hospital = require("./modal/Hospital")
 const HospitalAdmin = require("./modal/HospitalAdmin");
 const Doctor = require("./modal/Doctor")
+const Patient = require("./modal/Patient")
 
 app.use("/api/auth/superadmin", authRoutes);
 app.use("/api/hospital",hospitalRoute);
 app.use("/api/admin/hospital",hospitalAdminRoute)
-app.use("/api/doctor",doctorRoute)
+app.use("/api/doctor",doctorRoute);
+app.use("/api/patient",patientRoute)
 
 mongoose.connect(process.env.MONGODB_URL)
   .then(() => {

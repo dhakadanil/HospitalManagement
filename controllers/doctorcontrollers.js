@@ -1,6 +1,5 @@
 const Doctor = require("../modal/Doctor");
-const jwt = require("jsonwebtoken")
-
+const jwt = require("jsonwebtoken");
 exports.addDoctor = async(req,res)=>{
     try{
      console.log(req.user)
@@ -34,12 +33,60 @@ if(doctorexist){
     })
     }
 }
+exports.alldoctor = async(req,res)=>{
+    try{
+     if(req.user.role !== "AdminHospital"){
+        return res.status(403).json({
+            msg:"Only Admin Access"
+        })
+     }
+     const doctor = await Doctor.find({hospitalId:req.user.hospitalId})
+     if(!doctor){
+        return res.status(404).json({
+            msg:"Doctor not Found"
+        })
+     }
+     return res.status(200).json({
+        success:true,
+        doctor
+     })
 
-
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            mgs:"Server error"
+        })
+    }
+}
+exports.singledoctordetail = async(req,res)=>{
+    try{
+        if(req.user.role !== "AdminHospital"){
+            return res.status(403).json({
+                msg:"Only Admin Access"
+            })
+        }
+   const doctor = await Doctor.findOne({
+    _id:req.params.id,hospitalId:req.user.hospitalId})
+    if(!doctor){
+        return res.status(404).json({
+            msg:"Doctor Not Found"
+        })
+    }
+    return res.status(200).json({
+        success:true,
+        doctor
+    })
+    }catch(error){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}
 exports.editdoctor = async(req,res)=>{
     try{
     if(req.user.role !== "AdminHospital"){
-        return res.status(400).json({
+        return res.status(403).json({
             msg:"Only Admin Access"
         })
     }
@@ -71,3 +118,28 @@ const { name,email,phone,age,gender,specialization,experience} = req.body
         })
     }
 }
+exports.deletedoctor = async(req,res)=>{
+    try{
+   if(req.user.role !== "AdminHospital"){
+    return res.status(403).json({
+        msg:"Only Admin Access"
+    })
+}
+    const doctor = await Doctor.findOneAndDelete({
+        _id:req.params.id,hospitalId:req.user.hospitalId})
+   if(!doctor){
+    return res.status(404).json({
+        msg:"Doctor Not Found"
+    })
+   }
+    
+console.log(doctor)
+return res.status(200).json({
+    success:true,doctor
+})
+    }catch(err){
+        console.log(err)
+        msg:"Server Error"
+    }
+}
+

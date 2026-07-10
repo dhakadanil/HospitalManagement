@@ -57,8 +57,6 @@ return res.status(200).json({
         })
     }
 }
-
-
 exports.HospitaladminVerifiOtp = async(req,res)=>{
     try{
     console.log(req.body)
@@ -99,7 +97,6 @@ return res.status(200).json({
     })
 }
 }
-
 
 exports.Hospitaladminlogin = async (req,res)=>{
     try{
