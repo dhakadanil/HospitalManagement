@@ -6,7 +6,9 @@ const {
     editdoctor,
     alldoctor,
     singledoctordetail,
-    deletedoctor
+    deletedoctor,
+    allappointment,
+    appointmentupdatestatus
 } = require("../controllers/doctorcontrollers");
 
 const {doctorSchema} = require("../validations/doctorvalidation");
@@ -17,4 +19,6 @@ router.get("/alldoctor",authmiddelware,alldoctor)
 router.get("/singledoctordetail/:id",authmiddelware,singledoctordetail)
 router.put("/edit/:id",validate(doctorSchema),authmiddelware,editdoctor)
 router.delete("/deletedoctor/:id",authmiddelware,deletedoctor)
+router.get("/allappointment/:doctorId",allappointment)
+router.put("/appointmentupdatestatus/:appointmentId/status",appointmentupdatestatus)
 module.exports = router

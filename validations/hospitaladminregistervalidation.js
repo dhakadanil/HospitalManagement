@@ -25,14 +25,14 @@ const hospitaladminregisterschema = Joi.object({
         "string.pattern.base":"password 1 uppercase And 1 lowercase and 1 number "
     }),
     phone:Joi.string()
-    .required()
+    .required().trim()
     .pattern(/^[0-9]{10}$/).message({
         "string.empty":"Phone number required",
         "string.pattern.base":"please enter a valid number",
         
     }),
     hospitalId:Joi.string()
-    .trim().required().hex()
+    .trim().required().hex()    
     .messages({
         "string.empty":"Hospital Id required",
         "string.hex":"hospital id must be valid mongodb objectid"

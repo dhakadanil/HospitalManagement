@@ -1,9 +1,9 @@
 const mongoose = require("mongoose")
 
 const patientSchema  = new mongoose.Schema({
-    name:{
-        type:String
-    },
+   name:{
+    type:String
+   },
     email:{
         type:String
     },
@@ -11,18 +11,16 @@ const patientSchema  = new mongoose.Schema({
         type:String
     },
     dateOfBirth:{
+        type:Date,
         type:Number
     },
    phone:{
     type:Number
    },
    gender:{
-    enum:["Mail","Femail"]
+    type:String,
+    enum:["Male","Femail"]
    },
-   isVerified:{
-    type:Boolean,
-    default:false
-   }
 },{timestamps:true})
 
 module.exports = mongoose.model("Patient",patientSchema)

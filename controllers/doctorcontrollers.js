@@ -1,3 +1,4 @@
+const Appointment = require("../modal/Appointment");
 const Doctor = require("../modal/Doctor");
 const jwt = require("jsonwebtoken");
 exports.addDoctor = async(req,res)=>{
@@ -140,6 +141,60 @@ return res.status(200).json({
     }catch(err){
         console.log(err)
         msg:"Server Error"
+    }
+}
+exports.allappointment = async(req,res)=>{
+    try{
+   const doctorId = req.params.doctorId
+   const {status} = req.query;
+   if(!doctorId){
+    return res.status(400).json({
+        msg:"doctorId is Required"
+    })
+   }
+   const filter={doctorId}
+   if(status){
+    filter.status = status
+   }
+   const appointments = await Appointment.find(filter)
+   if(appointments.length == 0){
+    return res.status(404).json({
+        msg:"Appointment not found"
+    })
+   }
+   return res.status(200).json({
+     success:true,
+     appointments
+   })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}
+exports.appointmentupdatestatus = async(req,res)=>{
+    try{
+   const {appointmentId}=req.params
+   const {status}=req.body
+   const appointment = await Appointment.findById(appointmentId)
+   if(!appointment){
+    return res.status(404).json({
+        msg:"Appointment Not Found"
+    })
+   }
+   appointment.status = status  
+   await appointment.save()
+   return res.status(201).json({
+    success:true,
+    msg:"Appointment Status Update successfull",
+    appointment
+   })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
     }
 }
 
