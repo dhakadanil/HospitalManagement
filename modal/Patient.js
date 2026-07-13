@@ -14,6 +14,16 @@ const patientSchema  = new mongoose.Schema({
         type:Date,
         type:Number
     },
+    otp:{
+        type:String
+    },
+    otpExpiry:{
+        type:Number
+    },
+    isOtpVerified: {
+    type: Boolean,
+    default: false
+},
    phone:{
     type:Number
    },

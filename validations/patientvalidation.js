@@ -1,7 +1,10 @@
 const Joi = require("joi");
 
 const patientSchema = Joi.object({
-
+name:Joi.string()
+.required().messages({
+    "string.empty":"Name Is Requirerd"
+}),
 email:Joi.string()
 .email({tlds:{allow:["com"]}})
 .required().trim().lowercase()
@@ -21,7 +24,7 @@ password:Joi.string()
 phone:Joi.string()
 .required().trim()
 .pattern(/^[0-9]{10}$/)
-.message({
+.messages({
     "string.empty":"phone number is required",
     "string.pattern":"please enter a valid number"
 }),

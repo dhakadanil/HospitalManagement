@@ -14,5 +14,9 @@ const verifyOtpSchema = Joi.object({
     .trim()
     .required()
     .pattern(/^[0-9]{6}$/)
+    .messages({
+        "string.empty":"Otp Is Required",
+        "string.pattern.base":"please enter Otp 6 disit number"
+    })
 })
 module.exports = {verifyOtpSchema}

@@ -183,6 +183,12 @@ exports.appointmentupdatestatus = async(req,res)=>{
         msg:"Appointment Not Found"
     })
    }
+   const allowstatus = ["Pending","Approved","Completed","Cancel"];
+   if(!allowstatus.includes(status)){
+    return res.status(400).json({
+        msg:"Invalid status"
+    })
+   }
    appointment.status = status  
    await appointment.save()
    return res.status(201).json({
@@ -190,6 +196,34 @@ exports.appointmentupdatestatus = async(req,res)=>{
     msg:"Appointment Status Update successfull",
     appointment
    })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}
+exports.appointmentDetail = async(req,res)=>{
+    try{
+    const {appointmentId} = req.params
+    const appointment = await Appointment.findById(appointmentId)
+    .populate("patientId","name  email phone dateOfBirth gender")
+    .populate("doctorId","name  specialization")
+    .populate("hospitalId", "name address city state pincode")
+    if(!appointment){
+        return res.status(404).json({
+            msg:"Appointment Not Found"
+        })
+    }
+     if (appointment.patientId._id.toString() !== req.user.id) {
+    return res.status(403).json({
+        msg: "Access denied"
+    });
+}
+    return res.status(200).json({
+        success:true,
+        appointment
+    })
     }catch(err){
         console.log(err)
         return res.status(500).json({
