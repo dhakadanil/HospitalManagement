@@ -11,9 +11,10 @@ const {
 
 const authmiddelware = require("../middleware/authmiddelware");
 const { hospitalSchema } = require("../validations/hospitalvalidation");
+const { allcitySchema } = require("../validations/allcityhospitalvalidation");
 
 router.post("/addhospital",authmiddelware,validate(hospitalSchema),addhospital)
-router.get("/allcityhospital",allcityhospital)
+router.get("/allcityhospital",validate(allcitySchema),allcityhospital)
 router.put("/edithospital/:id",authmiddelware,validate(hospitalSchema),edithospital);
 router.delete("/deletehospital/:id",authmiddelware,deletehospital);
 router.get("/checkallhospitaladmin",authmiddelware,hospitaladmin);

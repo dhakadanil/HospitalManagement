@@ -22,7 +22,7 @@ exports.addhospital = async(req,res)=>{
         city ,state ,pincode
     })
   await hospital.save()
-    res.status(200).json({
+   return res.status(201).json({
         success:true,
         msg:"Add hospital",
         hospital
@@ -39,12 +39,12 @@ try{
     const {city} = req.query
     let hospitals;
     if(city){
-    hospitals=  await Hospital.find({city})
+    hospitals=  await Hospital.find({city:{$regex:`^${city}$`,$options:"i"}})
     }else{
       hospitals=  await Hospital.find()
     }
 
-    res.status(200).json({
+    return res.status(200).json({
         success:true,
         totalHospital:hospitals.length,
         hospitals
@@ -66,6 +66,7 @@ exports.edithospital = async(req,res)=>{
     }
     const {id} = req.params
     const {name ,address , phone,city,state,pincode} = req.body
+    const existhospital = await Hospital.findOne({name,city ,_id:{$ne:id}})
     const hospital = await Hospital.findByIdAndUpdate(id,
         {name,address,phone,city,state,pincode},{new:true}
     );

@@ -20,7 +20,7 @@ exports.SuperAdminregister = async (req, res) => {
     });
     await superadmin.save();
     console.log("Data Saved");
-    return res.status(200).json({
+    return res.status(201).json({
       success: true,
       msg: "Register Successfully",
     });
@@ -37,7 +37,7 @@ exports.SuperAdminlogin = async(req,res)=>{
   console.log(req.body);
   const superadmin = await SuperAdminModel.findOne({email});
   if(!superadmin){
-    return res.status(400).json({
+    return res.status(404).json({
       msg:"Admin Email not found"
     })
   }
@@ -48,7 +48,6 @@ exports.SuperAdminlogin = async(req,res)=>{
     msg:"Wrong Password"
   })
   }
-await superadmin.save();
 const token = jwt.sign({
     id:superadmin._id,
     email:superadmin.email,

@@ -137,7 +137,6 @@ exports.Hospitaladminlogin = async (req,res)=>{
 }
  }
 
-
  exports.hospitalAdminprofile = async (req,res)=>{
     try{
 if(req.user.role !== "AdminHospital"){
