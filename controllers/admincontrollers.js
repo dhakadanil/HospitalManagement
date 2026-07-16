@@ -15,7 +15,7 @@ const {name,email,password,phone,hospitalId} = req.body
 console.log(req.body);
 const existingAdmin  = await HospitalAdmin.findOne({email});
 if(existingAdmin ){
-return res.status(403).json({
+return res.status(409).json({
     msg:"Hospital Admin Allready Registered"
 })
 };
@@ -100,11 +100,7 @@ return res.status(200).json({
 
 exports.Hospitaladminlogin = async (req,res)=>{
     try{
-          if(req.user.role !== "superAdmin"){
-            return res.status(403).json({
-                msg:"Only Super Admin Access"
-            })
-        }
+ 
     const {email , password} = req.body
     const hospitaladmin = await HospitalAdmin.findOne({email});
     if(!hospitaladmin){
@@ -112,12 +108,19 @@ exports.Hospitaladminlogin = async (req,res)=>{
             msg:"Email Not Found"
         })
     }
+       if (!hospitaladmin.isVerified) {
+    return res.status(403).json({
+        msg: "Please verify your email first"
+    });
+    }
     const matchpassword =await bcrypt.compare(password,hospitaladmin.password);
     if(!matchpassword){
-        return res.status(400).json({
+        return res.status(401).json({
             msg:"Wrong Password"
         })
     }
+ 
+    
     const token = jwt.sign({
     id:hospitaladmin._id,
     email:hospitaladmin.email,
@@ -140,15 +143,8 @@ exports.Hospitaladminlogin = async (req,res)=>{
  exports.hospitalAdminprofile = async (req,res)=>{
     try{
 if(req.user.role !== "AdminHospital"){
-    return res.status(400).json({
-        msg:"Only Admin Access"
-    })
-}
-const{hospitalId} = req.query;
-if(hospitalId && hospitalId !== req.user.hospitalId.toString()){
     return res.status(403).json({
-        message:false,
-        msg:"you are not allow access another hospital"
+        msg:"Only Admin Access"
     })
 }
 const admin  = await HospitalAdmin.findById(req.user.id).populate("hospitalId");

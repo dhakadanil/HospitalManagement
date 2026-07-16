@@ -17,5 +17,5 @@ router.post("/addhospital",authmiddelware,validate(hospitalSchema),addhospital)
 router.get("/allcityhospital",validate(allcitySchema),allcityhospital)
 router.put("/edithospital/:id",authmiddelware,validate(hospitalSchema),edithospital);
 router.delete("/deletehospital/:id",authmiddelware,deletehospital);
-router.get("/checkallhospitaladmin",authmiddelware,hospitaladmin);
+router.get("/checkhospitaladmin",authmiddelware,hospitaladmin);
 module.exports = router

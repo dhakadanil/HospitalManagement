@@ -99,6 +99,7 @@ exports.myappointments = async(req,res)=>{
         })
     }
 }
+
 exports.allappointment = async(req,res)=>{
     try{
    const doctorId = req.params.doctorId
@@ -120,6 +121,7 @@ exports.allappointment = async(req,res)=>{
    }
    return res.status(200).json({
      success:true,
+     totalAppointment:appointments.length,
      appointments
    })
     }catch(err){
@@ -201,5 +203,43 @@ exports.appointmentDetail = async(req,res)=>{
         })
     }
 }
+
+exports.allappointmentstatus = async(req,res)=>{
+    try{
+        if(req.user.role !== "AdminHospital"){
+            return res.status(403).json({
+                msg:"Only Hospital Admin Access"
+            })
+        }
+   const {hospitalId} = req.user
+   const{status} = req.query
+   const filter={hospitalId}
+   if(status){
+    filter.status = status
+   }
+   const appointment = await Appointment.find(filter)
+   .populate("patientId" ,"name email phone")
+   .populate("doctorId","name specialization")
+   
+   if (appointment.length === 0){
+    return res.status(404).json({
+        msg:"Appointment Not Found"
+    })
+   }
+
+
+   return res.status(200).json({
+    success:true,
+    totalAppointment:appointment.length,
+    appointment
+    })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}
+
 
 

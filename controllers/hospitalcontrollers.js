@@ -67,6 +67,11 @@ exports.edithospital = async(req,res)=>{
     const {id} = req.params
     const {name ,address , phone,city,state,pincode} = req.body
     const existhospital = await Hospital.findOne({name,city ,_id:{$ne:id}})
+    if(existhospital){
+        return res.status(400).json({
+            msg:"Hospital Allready Exists"
+        })
+    }
     const hospital = await Hospital.findByIdAndUpdate(id,
         {name,address,phone,city,state,pincode},{new:true}
     );
@@ -91,7 +96,7 @@ exports.edithospital = async(req,res)=>{
 exports.deletehospital = async(req,res)=>{
     try{
          if(req.user.role !== "superAdmin"){
-        return res.status(401).json({
+        return res.status(403).json({
             msg:"Only super admin access"
         })
     }
@@ -106,10 +111,8 @@ exports.deletehospital = async(req,res)=>{
      return res.status(200).json(
         {
         success:true,
-        msg:"Hospital delete"
+        msg:"Hospital delete Successfully"
      })
-        
-
     }catch(err){
         console.log(err)
         return res.status(500).json({
@@ -134,11 +137,15 @@ try {
         })
       }
           return res.status(200).json({
-        message:true,admin
+        success:true,admin
     })
     }
-
     const admins = await HospitalAdmin.find().populate("hospitalId");
+    if(admins.length === 0){
+        return res.status(404).json({
+            msg:"No Hospital Admin Found"
+        })
+    }
         return res.status(200).json({
             success: true,
             totalAdmins: admins.length,

@@ -7,7 +7,8 @@ const {
     alldoctor,
     singledoctordetail,
     deletedoctor,
-
+    patientselecthospitalindoctor,
+    searchDoctorsBySpecialization
 
 } = require("../controllers/doctorcontrollers");
 
@@ -19,5 +20,6 @@ router.get("/alldoctor",authmiddelware,alldoctor)
 router.get("/singledoctordetail/:id",authmiddelware,singledoctordetail)
 router.put("/edit/:id",validate(doctorSchema),authmiddelware,editdoctor)
 router.delete("/deletedoctor/:id",authmiddelware,deletedoctor)
-
+router.get("/hospital/:hospitalId",authmiddelware,patientselecthospitalindoctor)
+router.get("/search/doctor/specialization",authmiddelware,searchDoctorsBySpecialization)
 module.exports = router

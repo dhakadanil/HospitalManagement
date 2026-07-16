@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs")
 
 
-
+// hospitalAdmin
 exports.addDoctor = async(req,res)=>{
     try{
      console.log(req.user)
@@ -26,12 +26,10 @@ if(doctorexist){
    specialization,experience,hospitalId
    })
    await doctor.save()
-
      return res.status(201).json({
     success:true,
     msg:"Doctor Add Successfully"
    })
-
     }catch(err){
     console.log(err)
     return res.status(500).json({   
@@ -151,5 +149,61 @@ return res.status(200).json({
         })
     }
 }
+// patient 
+exports.patientselecthospitalindoctor = async(req,res)=>{
+    try{
+        if(req.user.role !== "Patient"){
+            return res.status(403).json({
+                msg:"Only Patient Access"
+            })
+        }
+     const {hospitalId} = req.params
+     const doctors = await Doctor.find({hospitalId})
+     if(doctors.length === 0){
+        return res.status(404).json({
+            msg:"Docotr Not found"
+        })
+     }
+     return res.status(200).json({
+        success:true,
+        totalDoctors:doctors.length,
+        doctors
+     })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}
+
+exports.searchDoctorsBySpecialization = async(req,res)=>{
+    try{
+        if(req.user.role !== "Patient"){
+            return res.status(403).json({
+                msg:"Only Patient Access"
+            })
+        }
+    const {specialization} = req.query
+    const doctors = await Doctor.find({specialization:{$regex:`^${specialization}$`,$options: "i"}})
+    if(doctors.length === 0){
+        return res.status(404).json({
+            msg:"Doctor Not Found"
+        })
+    }
+    return res.status(200).json({
+        success:true,
+        totalDoctors:doctors.length,
+        doctors
+    })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}
+
+
 
 

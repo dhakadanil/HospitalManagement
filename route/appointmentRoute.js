@@ -6,7 +6,8 @@ const {
     myappointments,  
     allappointment,
     appointmentupdatestatus,
-    appointmentDetail
+    appointmentDetail,
+    allappointmentstatus
 }= require("../controllers/appointmentcontrollers");
 
 const authmiddelware = require("../middleware/authmiddelware")
@@ -16,4 +17,5 @@ router.get("/myappointments",authmiddelware,myappointments)
 router.get("/allappointment/:doctorId",allappointment)
 router.put("/appointmentupdatestatus/:appointmentId/status",authmiddelware,appointmentupdatestatus)
 router.get("/appointmentdetail/:appointmentId",authmiddelware,appointmentDetail)
+router.get("/allappointmentstatus",authmiddelware,allappointmentstatus)
 module.exports = router

@@ -16,6 +16,6 @@ const {hospitaladminregisterschema} = require("../validations/hospitaladminregis
 
 router.post("/hospitalAdminregister",validate(hospitaladminregisterschema),authmiddelware,HospitalAdminRegister)
 router.post("/verify-otp",validate(verifyOtpSchema),HospitaladminVerifiOtp)
-router.post("/login",validate(adminLoginSchema),authmiddelware,Hospitaladminlogin);
+router.post("/login",validate(adminLoginSchema),Hospitaladminlogin);
 router.get("/profile",authmiddelware,hospitalAdminprofile)
 module.exports = router
