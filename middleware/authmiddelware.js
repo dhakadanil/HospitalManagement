@@ -21,5 +21,4 @@ const authmiddelware = async(req,res,next)=>{
     })
 }
 }
-
 module.exports = authmiddelware;

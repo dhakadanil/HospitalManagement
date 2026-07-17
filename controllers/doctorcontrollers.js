@@ -69,8 +69,9 @@ exports.singledoctordetail = async(req,res)=>{
                 msg:"Only Admin Access"
             })
         }
+        const {id} = req.params
    const doctor = await Doctor.findOne({
-    _id:req.params.id,hospitalId:req.user.hospitalId})
+   _id:id,hospitalId:req.user.hospitalId})
     if(!doctor){
         return res.status(404).json({
             msg:"Doctor Not Found"
@@ -94,17 +95,29 @@ exports.editdoctor = async(req,res)=>{
             msg:"Only Admin Access"
         })
     }
-const { name,email,phone,age,gender,specialization,experience} = req.body
     const {id} = req.params
     const doctors = await Doctor.findOne({_id:id,hospitalId:req.user.hospitalId})
     if(!doctors){
-        return res.status(403).json({
-            msg:"Not Allowed"
+        return res.status(404).json({
+            msg:"Doctor Not Found"
         })
     }
-    const doctor = await Doctor.findByIdAndUpdate(id,{
-        name,email,phone,age,gender,specialization,experience,
-    },{new:true})
+    const { name,email,phone,age,gender,specialization,experience} = req.body
+    
+    const updatedata ={}
+    if(name)updatedata.name = name;
+    if(email)updatedata.email = email;
+    if(phone)updatedata.phone = phone;
+    if(age)updatedata.age = age;
+    if(gender)updatedata.gender = gender;
+    if(specialization)updatedata.specialization = specialization;
+    if(experience)updatedata.experience = experience
+    if(Object.keys(updatedata).length == 0){
+        return res.status(400).json({
+            msg:"Please Provide at one filed add"
+        })
+    }
+    const doctor = await Doctor.findByIdAndUpdate(id,updatedata,{new:true})
 
     if(!doctor){
         return res.status(404).json({

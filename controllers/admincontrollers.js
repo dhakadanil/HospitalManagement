@@ -59,7 +59,6 @@ return res.status(200).json({
 }
 exports.HospitaladminVerifiOtp = async(req,res)=>{
     try{
-    console.log(req.body)
 const {email,otp} =req.body
 const hospitaladmin = await HospitalAdmin.findOne({email})
 if(!hospitaladmin){
@@ -100,7 +99,6 @@ return res.status(200).json({
 
 exports.Hospitaladminlogin = async (req,res)=>{
     try{
- 
     const {email , password} = req.body
     const hospitaladmin = await HospitalAdmin.findOne({email});
     if(!hospitaladmin){

@@ -72,9 +72,19 @@ exports.edithospital = async(req,res)=>{
             msg:"Hospital Allready Exists"
         })
     }
-    const hospital = await Hospital.findByIdAndUpdate(id,
-        {name,address,phone,city,state,pincode},{new:true}
-    );
+    const updatedata = {};
+    if(name)updatedata.name = name;
+    if(address)updatedata.address = address;
+    if(phone)updatedata.phone = phone;
+    if(city)updatedata.city = city;
+    if(state)updatedata.state = state;
+    if(pincode)updatedata.pincode = pincode
+    if(Object.keys(updatedata).length ==0){
+        return res.status(400).json({
+            msg:"Please Provide at One field add"
+        })
+    }
+    const hospital = await Hospital.findByIdAndUpdate(id,updatedata,{new:true});
     if(!hospital){
         return res.status(404).json({
             msg:"Hospital Not Found"
@@ -133,11 +143,11 @@ try {
       const admin = await HospitalAdmin.findOne({ hospitalId }).populate("hospitalId");
       if(!admin){
         return res.status(404).json({
-            msg:"hospital; admin not found"
+            msg:"hospital admin not found"
         })
       }
           return res.status(200).json({
-        success:true,admin
+           success:true,admin
     })
     }
     const admins = await HospitalAdmin.find().populate("hospitalId");

@@ -100,6 +100,11 @@ exports.editprofile = async(req,res)=>{
    if(phone)dataupdate.phone = phone;
    if(gender)dataupdate.gender = gender;
    if(dateOfBirth)dataupdate.dateOfBirth = dateOfBirth;
+   if(Object.keys(dataupdate).length ==0){
+    return res.status(400).json({
+        msg:"Please Provide at one field add"
+    })
+   }
    const patient = await Patient.findByIdAndUpdate(patientId,
     dataupdate,{new:true}
    );
