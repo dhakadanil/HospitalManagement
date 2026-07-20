@@ -117,8 +117,6 @@ exports.Hospitaladminlogin = async (req,res)=>{
             msg:"Wrong Password"
         })
     }
- 
-    
     const token = jwt.sign({
     id:hospitaladmin._id,
     email:hospitaladmin.email,

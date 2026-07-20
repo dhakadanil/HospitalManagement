@@ -134,7 +134,7 @@ exports.forgotpassword = async(req,res)=>{
     console.log("Generated OTP:", otp);
     const hashedOtp = await bcrypt.hash(otp.toString(),10)
     patient.otp = hashedOtp
-    patient.otpExpiry = Date.now()+10*60*1000
+    patient.otpExpiry = Date.now()+10*60*1000   
    
     await patient.save()
     await sendMail(patient.email,otp)
@@ -143,9 +143,6 @@ exports.forgotpassword = async(req,res)=>{
         msg:"Otp Send Successfully To your Email"
     })
     }catch(err){
-     patient.otp = null;
-     patient.otpExpiry = null;
-     await patient.save();
         console.log(err)
         return res.status(500).json({
             msg:"Server Error"

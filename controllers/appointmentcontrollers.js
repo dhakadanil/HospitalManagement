@@ -6,6 +6,11 @@ const Patient = require("../modal/Patient");
 
 exports.appointmentBook = async(req,res)=>{
     try{
+        if(req.user.role !== "Patient"){
+            return res.status(403).json({
+                msg:"Only Patient Access"
+            })
+        }
         const {doctorId} = req.params
         const {appointmentDate,appointmentTime,reason} = req.body
         const patientId = req.user.id
@@ -15,14 +20,13 @@ exports.appointmentBook = async(req,res)=>{
         msg:"Doctor Not Found"
     })
    }
-   console.log(doctor)
  const patient = await Patient.findById(patientId);
   if(!patient){
     return res.status(404).json({
         msg:"Patient Not Found"
     })
   }
-   const appointmentDateTime = new Date(`${appointmentDate} ${appointmentTime}`);
+  const appointmentDateTime = new Date(`${appointmentDate}T${appointmentTime}:00`);
     if (appointmentDateTime <= new Date()) {
        return res.status(400).json({
         msg: "Please select a future date and time"
@@ -79,8 +83,12 @@ exports.appointmentBook = async(req,res)=>{
 }
 exports.myappointments = async(req,res)=>{
     try{
-    const patientId =req.user.id
-    const myappointment = await Appointment.find({patientId})
+        if(req.user.role !== "Patient"){
+            return res.status(403).json({
+                msg:"Only patient Access"
+            })
+        }
+    const myappointment = await Appointment.find({patientId:req.user.id})
     .populate("doctorId").populate("hospitalId");
 
     if(myappointment.length == 0){
@@ -100,8 +108,14 @@ exports.myappointments = async(req,res)=>{
     }
 }
 
+// only one doctor appointment and filter by status
 exports.allappointment = async(req,res)=>{
     try{
+        if(req.user.role !== "AdminHospital"){
+            return res.status(403).json({
+                msg:"Only Hospital Admin Access"
+            })
+        }
    const doctorId = req.params.doctorId
    const {status} = req.query;
    if(!doctorId){
@@ -109,11 +123,20 @@ exports.allappointment = async(req,res)=>{
         msg:"doctorId is Required"
     })
    }
-   const filter={doctorId}
+   const  doctor = await Doctor.findOne({
+    _id:doctorId,hospitalId:req.user.hospitalId})
+   if(!doctor){
+    return res.status(404).json({
+        msg:"Doctor Not Found"
+    })
+   }
+   const filter = {doctorId,hospitalId:req.user.hospitalId}
    if(status){
     filter.status = status
    }
    const appointments = await Appointment.find(filter)
+   .populate("patientId","name email phone")
+   .populate("doctorId","name specialization")
    if(appointments.length == 0){
     return res.status(404).json({
         msg:"Appointment not found"
@@ -204,6 +227,7 @@ exports.appointmentDetail = async(req,res)=>{
     }
 }
 
+// Hospital ki sabhi appointment dikhana and filter by status
 exports.allappointmentstatus = async(req,res)=>{
     try{
         if(req.user.role !== "AdminHospital"){
@@ -227,11 +251,42 @@ exports.allappointmentstatus = async(req,res)=>{
     })
    }
 
-
    return res.status(200).json({
     success:true,
     totalAppointment:appointment.length,
     appointment
+    })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}
+
+exports.todayappointment = async(req,res)=>{
+    try{
+    if(req.user.role !== "AdminHospital"){
+        return res.status(403).json({
+            msg:"Only Hospital Admin Access"
+        })
+    }
+    const todayDate = new Date().toISOString().split("T")[0];
+    console.log(todayDate)
+    const appointments = await Appointment.find({
+        hospitalId:req.user.hospitalId,appointmentDate:todayDate
+    }).populate("patientId","name email phone")
+    .populate("doctorId","name specialization");
+    if(appointments.length == 0){
+        console.log("appointment not found")
+        return res.status(404).json({
+            msg:"Appointment Not Found"
+        })
+    }
+    return res.status(200).json({
+        success:true,
+        totalAppointments: appointments.length,
+        appointments
     })
     }catch(err){
         console.log(err)

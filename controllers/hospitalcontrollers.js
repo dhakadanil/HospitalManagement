@@ -78,8 +78,8 @@ exports.edithospital = async(req,res)=>{
     if(phone)updatedata.phone = phone;
     if(city)updatedata.city = city;
     if(state)updatedata.state = state;
-    if(pincode)updatedata.pincode = pincode
-    if(Object.keys(updatedata).length ==0){
+    if(pincode)updatedata.pincode = pincode;
+    if(Object.keys(updatedata).length == 0){
         return res.status(400).json({
             msg:"Please Provide at One field add"
         })
