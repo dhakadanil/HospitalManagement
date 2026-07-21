@@ -160,3 +160,29 @@ return res.status(200).json({
         })
     }
  }
+
+ exports.deleteHospitalAdmin = async(req,res)=>{
+    try{
+   if(req.user.role !== "superAdmin"){
+    return res.status(403).json({
+        msg:"Only Super Admin Access"
+    })
+   }
+   const {id} = req.params
+   const deleteAdmin = await HospitalAdmin.findByIdAndDelete(id)
+   if(!deleteAdmin){
+    return res.status(404).json({
+        msg:"Hospital Admin Not Found"
+    })
+   }
+   return res.status(200).json({
+    success:true,
+    msg:"Delete Hospital Admin Successfully"
+   })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+ }

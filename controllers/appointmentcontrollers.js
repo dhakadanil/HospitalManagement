@@ -2,7 +2,7 @@ const express = require("express");
 const Appointment = require("../modal/Appointment");
 const Doctor = require("../modal/Doctor");
 const Patient = require("../modal/Patient");
-
+const sendappointmentMail = require("../utils/sendmailStatus")
 
 exports.appointmentBook = async(req,res)=>{
     try{
@@ -90,7 +90,6 @@ exports.myappointments = async(req,res)=>{
         }
     const myappointment = await Appointment.find({patientId:req.user.id})
     .populate("doctorId").populate("hospitalId");
-
     if(myappointment.length == 0){
         return res.status(404).json({
             msg:" Appointments Not Found"
@@ -181,8 +180,23 @@ exports.appointmentupdatestatus = async(req,res)=>{
         msg:"appointment already this status"
     })
    }
+   const patient = await Patient.findById(appointment.patientId);
+   if(!patient){
+    return res.status(404).json({
+        msg:"Patient not Found"
+    })
+   }
+   console.log("Patient:", patient);
+console.log("Patient Email:", patient.email);
    appointment.status = status  
    await appointment.save()
+   
+   await sendappointmentMail(
+    patient.email,
+    appointment.status,
+    appointment.appointmentDate,
+    appointment.appointmentTime
+)
    return res.status(200).json({
     success:true,
     msg:"Appointment Status Update successfull",
@@ -296,5 +310,71 @@ exports.todayappointment = async(req,res)=>{
     }
 }
 
+exports.searchappointmentByDate = async(req,res)=>{
+    try{
+   if(req.user.role !== "AdminHospital"){
+    return res.status(403).json({
+        msg:"Only Hospital Admin Access"
+    })
+   }
+   const {hospitalId}= req.user
+   const {date ,startDate,endDate,status} = req.query;
+  const allowstatus = ["Pending","Approved","Completed","Cancel"]
+if(status && !allowstatus.includes(status)){
+    return res.status(400).json({
+        msg:"Invalid Status"
+    })
+}
+// date and range ek sath not allowed
+ if(date&&(startDate||endDate)){
+    return res.status(400).json({
+        msg:"Use either date or date range,not both"
+    })
+   }
+//    range me dono date required
+if((startDate && !endDate)||(!startDate && endDate)){
+    return res.status(400).json({
+        msg:"both startDate and EndDate is required"
+    })
+}
+// start date enddate se pahle ki honi chahiye 
+if(startDate && endDate && startDate > endDate){
+    return res.status(400).json({
+        msg:"startDate Can'not be graterthen endDate"
+    })
+}
+ const filter = {hospitalId}
+   if(status){
+    filter.status = status
+   }
+// single date and date range
+  if(date){
+    filter.appointmentDate = date
+  }else if(startDate && endDate){
+    filter.appointmentDate = {
+        $gte:startDate,$lte:endDate
+    }
+  }
+   const appointments = await Appointment.find(filter)
+   .populate("patientId","name email phone")
+   .populate("doctorId","name specialization")
+   if(appointments.length === 0){
+    return res.status(404).json({
+        msg:"Appointment Not found"
+    })
+   }
+
+   return res.status(200).json({
+    success:true,
+    totalappointments:appointments.length,
+    appointments
+   })
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({
+            msg:"Server Error"
+        })
+    }
+}
 
 

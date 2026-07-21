@@ -1,6 +1,7 @@
 const SuperAdminModel  = require("../modal/SuperAdmin");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const { findOne } = require("../modal/Appointment");
 exports.SuperAdminregister = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -60,6 +61,35 @@ return res.status(200).json({
         token: token
 });
 
+  }catch(err){
+    console.log(err)
+    return res.status(500).json({
+      msg:"Server Error"
+    })
+  }
+}
+
+exports.profile = async(req,res)=>{
+  try{
+    console.log("Data",req.user)
+  if(req.user.role !== "superAdmin"){
+    return res.status(403).json({
+      msg:"Only Super Admin Access"
+    })
+  }
+
+  const {email} = req.user
+  const profile = await SuperAdminModel.findOne({email})
+  if(!profile){
+    return res.status(404).json({
+      msg:"Email Not Found"
+    })
+  }
+
+  return res.status(200).json({
+    success:true,
+     profile
+  })
   }catch(err){
     console.log(err)
     return res.status(500).json({

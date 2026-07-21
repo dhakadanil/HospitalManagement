@@ -5,7 +5,8 @@ const {
 HospitalAdminRegister,
 HospitaladminVerifiOtp,
 Hospitaladminlogin,
-hospitalAdminprofile
+hospitalAdminprofile,
+deleteHospitalAdmin
 } = require("../controllers/admincontrollers");
 
 const authmiddelware = require("../middleware/authmiddelware")
@@ -18,4 +19,5 @@ router.post("/hospitalAdminregister",validate(hospitaladminregisterschema),authm
 router.post("/verify-otp",validate(verifyOtpSchema),HospitaladminVerifiOtp)
 router.post("/login",validate(adminLoginSchema),Hospitaladminlogin);
 router.get("/profile",authmiddelware,hospitalAdminprofile)
+router.delete("/delete-hospital-admin/:id",authmiddelware,deleteHospitalAdmin)
 module.exports = router
