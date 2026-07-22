@@ -16,7 +16,7 @@ const authmiddelware = async(req,res,next)=>{
     let user;
     if(tokendata.role === "Patient"){
         user = await Patient.findById(tokendata.id)
-    }else if(tokendata.role === "AdminHospital"){AdminHospital
+    }else if(tokendata.role === "AdminHospital"){
         user = await HospitalAdmin.findById(tokendata.id)
     }else if(tokendata.role === "superAdmin"){
         user = await superAdmin.findById(tokendata.id)

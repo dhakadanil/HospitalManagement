@@ -18,6 +18,7 @@ const {adminLoginSchema} = require("../validations/adminLoginvalidation");
 const {forgotPasswordSchema} =require("../validations/forgotPasswordvalidation")
 const { verifyOtpSchema } = require("../validations/verifyOtpvalidation");
 const { resetPasswordSchema } = require("../validations/resetpasswordvalidation");
+const { resendOtpSchema } = require("../validations/resendOtpvalidation");
 const authmiddelware = require("../middleware/authmiddelware"); 
 
 
@@ -27,5 +28,5 @@ router.post("/login",validate(adminLoginSchema),SuperAdminlogin)
 router.post("/forgotpassword",validate(forgotPasswordSchema),forgotpassword)
 router.post("/reset-password",validate(resetPasswordSchema),resetpassword)
 router.get("/profile",authmiddelware,profile)
-router.post("/resend-Otp",resendOtp)
+router.post("/resend-Otp",validate(resendOtpSchema),resendOtp)
 module.exports = router

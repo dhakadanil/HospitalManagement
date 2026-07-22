@@ -11,7 +11,7 @@ const doctorSchema = Joi.object({
     .email({tlds:{allow:["com"]}})
     .required().trim()
     .lowercase().messages({
-        "string.empty":"Eamil Required",
+        "string.empty":"Eamil Required",    
         "string.email":"Please Enter Your valid email"
     }),
     phone:Joi.string()

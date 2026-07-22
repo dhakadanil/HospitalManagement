@@ -13,12 +13,13 @@ const {
 } = require("../controllers/doctorcontrollers");
 
 const {doctorSchema} = require("../validations/doctorvalidation");
+const { editdoctorSchema } = require("../validations/editdoctorvalidation");
 const authmiddelware = require("../middleware/authmiddelware");
 
 router.post("/add",validate(doctorSchema),authmiddelware,addDoctor)
 router.get("/alldoctor",authmiddelware,alldoctor)
 router.get("/singledoctordetail/:id",authmiddelware,singledoctordetail)
-router.put("/edit/:id",validate(doctorSchema),authmiddelware,editdoctor)
+router.put("/edit/:id",validate(editdoctorSchema),authmiddelware,editdoctor)
 router.delete("/deletedoctor/:id",authmiddelware,deletedoctor)
 router.get("/hospital/:hospitalId",authmiddelware,patientselecthospitalindoctor)
 router.get("/search/doctor/specialization",authmiddelware,searchDoctorsBySpecialization)

@@ -81,6 +81,7 @@ exports.appointmentBook = async(req,res)=>{
         })
     }
 }
+// Patient appointment
 exports.myappointments = async(req,res)=>{
     try{
         if(req.user.role !== "Patient"){
@@ -107,7 +108,7 @@ exports.myappointments = async(req,res)=>{
     }
 }
 
-// only one doctor appointment and filter by status
+// only one doctor appointment and filter by status (AdminHospital)
 exports.allappointment = async(req,res)=>{
     try{
         if(req.user.role !== "AdminHospital"){
@@ -228,7 +229,6 @@ exports.appointmentDetail = async(req,res)=>{
             msg:"Appointment Not Found"
         })
     }
- 
     return res.status(200).json({
         success:true,
         appointment

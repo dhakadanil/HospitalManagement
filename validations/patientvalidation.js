@@ -36,7 +36,7 @@ gender:Joi.string()
 .valid("Male","Female").required()
 .messages({
   "string.empty":"Gender is required",
-  "any.only":"Gender must bs Male And Female"
+  "any.only":"Gender must be Male And Female"
 })
 })
 

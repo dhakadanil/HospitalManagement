@@ -17,11 +17,12 @@ const {patientSchema} = require("../validations/patientvalidation")
 const {forgotPasswordSchema} = require("../validations/forgotPasswordvalidation")
 const { verifyOtpSchema } = require("../validations/verifyOtpvalidation")
 const {resetPasswordSchema} = require("../validations/resetpasswordvalidation")
+const { patienteditSchema } = require("../validations/patienteditvalidation")
 
 router.post("/register",validate(patientSchema),register);
 router.post("/login",validate(patientSchema),login)
 router.get("/profile",authmiddelware,profile);
-router.put("/updateprofile",authmiddelware,editprofile)
+router.put("/updateprofile",validate(patienteditSchema),authmiddelware,editprofile)
 router.post("/forgotpassword",validate(forgotPasswordSchema),forgotpassword)
 router.post("/verify-otp",validate(verifyOtpSchema),VerifyOtp)
 router.post("/resetpassword",validate(resetPasswordSchema),resetpassword)
