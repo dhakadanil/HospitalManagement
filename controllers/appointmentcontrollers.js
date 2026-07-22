@@ -377,4 +377,38 @@ if(startDate && endDate && startDate > endDate){
     }
 }
 
+exports.cancelappointment = async(req,res)=>{
+  try{
+  if(req.user.role !== "Patient"){
+    return res.status(403).json({
+        msg:"Only Patient Access"
+    })
+  }
+  const {appointmentId} =req.params
+  const patientId = req.user.id
+  const appointment = await Appointment.findOne({_id:appointmentId,patientId})
+  if(!appointment){
+    return res.status(404).json({
+        msg:"Appointment Not Found"
+    })
+  }
+  if(appointment.status !== "Pending"){
+    return res.status(400).json({
+        msg:"Only Pending appointment can be Cancelled"
+    })
+  }
+  appointment.status = "Cancel"
+  await appointment.save()
+    return res.status(201).json({
+        msg:"Appointment Cancal successfully",
+        appointment
+    })
+  }catch(err){
+    console.log(err)
+    return res.status(500).json({
+        msg:"Server Error"
+    })
+  }
+}
+
 

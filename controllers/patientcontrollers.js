@@ -75,7 +75,7 @@ exports.profile = async(req,res)=>{
     })
    }
    return res.status(200).json({
-    msg:"You Profile",
+    success:true,
     patient
    })
     }catch(err){

@@ -10,7 +10,17 @@ const SuperadminSchema = new mongoose.Schema({
  password:{
     type:String
  },
-
+   otp: {
+        type: String,
+        default: null
+    },
+     otpExpiry:{
+        type:Number
+    },
+   isOtpVerified: {
+    type: Boolean,
+    default: false
+},
  role: {
   type: String,
   unique:true,

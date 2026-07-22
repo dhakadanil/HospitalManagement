@@ -9,7 +9,8 @@ const {
     appointmentDetail,
     allappointmentstatus,
     todayappointment,
-    searchappointmentByDate
+    searchappointmentByDate,
+    cancelappointment
 }= require("../controllers/appointmentcontrollers");
 
 const authmiddelware = require("../middleware/authmiddelware")
@@ -23,4 +24,5 @@ router.get("/appointmentdetail/:appointmentId",authmiddelware,appointmentDetail)
 router.get("/allappointmentstatus",authmiddelware,allappointmentstatus);
 router.get("/today/appointment",authmiddelware,todayappointment)
 router.get("/search/appointmentBydateandfilter",authmiddelware,searchappointmentByDate)
+router.post("/cancel/:appointmentId",authmiddelware,cancelappointment)
 module.exports = router

@@ -6,14 +6,26 @@ const router = express.Router();
 const {
     SuperAdminregister,
     SuperAdminlogin,
-    profile
+    forgotpassword,
+    VerifyOtp,
+    resetpassword,
+    profile,
+    resendOtp
 } = require("../controllers/authcontrollers")
 
 const {adminRegisterSchema} = require("../validations/adminRegistervalidation")
 const {adminLoginSchema} = require("../validations/adminLoginvalidation");
-const authmiddelware = require("../middleware/authmiddelware");
+const {forgotPasswordSchema} =require("../validations/forgotPasswordvalidation")
+const { verifyOtpSchema } = require("../validations/verifyOtpvalidation");
+const { resetPasswordSchema } = require("../validations/resetpasswordvalidation");
+const authmiddelware = require("../middleware/authmiddelware"); 
+
 
 router.post("/register",validate(adminRegisterSchema),SuperAdminregister);
+router.post("/verify-otp",validate(verifyOtpSchema),VerifyOtp)
 router.post("/login",validate(adminLoginSchema),SuperAdminlogin)
+router.post("/forgotpassword",validate(forgotPasswordSchema),forgotpassword)
+router.post("/reset-password",validate(resetPasswordSchema),resetpassword)
 router.get("/profile",authmiddelware,profile)
+router.post("/resend-Otp",resendOtp)
 module.exports = router
