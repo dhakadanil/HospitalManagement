@@ -7,10 +7,7 @@ const jwt = require("jsonwebtoken")
 
 exports.HospitalAdminRegister = async (req,res)=>{
   try{
-    if(req.user.role !== "superAdmin"){
-        return res.status(403).json({
-          msg:"Only Super Admin Access"})
-        }
+  
 const {name,email,password,phone,hospitalId} = req.body
 console.log(req.body);
 const existingAdmin  = await HospitalAdmin.findOne({email});
@@ -59,6 +56,11 @@ return res.status(200).json({
 }
 exports.HospitaladminVerifiOtp = async(req,res)=>{
     try{
+        if(req.user.role !== "superAdmin"){
+            return res.status(403).json({
+                msg:"Only Super admin Access"
+            })
+        }
 const {email,otp} =req.body
 const hospitaladmin = await HospitalAdmin.findOne({email})
 if(!hospitaladmin){
@@ -99,6 +101,11 @@ return res.status(200).json({
 
 exports.Hospitaladminlogin = async (req,res)=>{
     try{
+        if(req.user.role !== "superAdmin"){
+            return res.status(403).json({
+                msg:"Only Super Admin Access"
+            })
+        }
     const {email , password} = req.body
     const hospitaladmin = await HospitalAdmin.findOne({email});
     if(!hospitaladmin){

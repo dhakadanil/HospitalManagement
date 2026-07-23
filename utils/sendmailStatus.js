@@ -10,8 +10,7 @@ const transporter = nodemailer.createTransport({
 
 })
     const sendappointmentMail = async(
-        email,status,appointmentDate,appointmentTime
-    )=>{
+        email,status,appointmentDate,appointmentTime)=>{
         try{
         let subject;
         let text;

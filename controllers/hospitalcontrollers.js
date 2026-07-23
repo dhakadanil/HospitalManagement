@@ -4,11 +4,7 @@ const HospitalAdmin = require("../modal/HospitalAdmin")
 exports.addhospital = async(req,res)=>{
     try{
     console.log(req.user)
-    if(req.user.role !== "superAdmin"){
-        return res.status(401).json({
-            msg:"Only super admin access"
-        })
-    }
+  
     const {name ,address,phone,city,state,pincode } = req.body
     console.log(req.body);
     const Existshospital = await Hospital.findOne({name,address,city});
@@ -59,11 +55,6 @@ try{
 
 exports.edithospital = async(req,res)=>{
     try{
-         if(req.user.role !== "superAdmin"){
-        return res.status(401).json({
-            msg:"Only super admin access"
-        })
-    }
     const {id} = req.params
     const {name ,address , phone,city,state,pincode} = req.body
     const existhospital = await Hospital.findOne({name,city ,_id:{$ne:id}})
@@ -105,11 +96,6 @@ exports.edithospital = async(req,res)=>{
 
 exports.deletehospital = async(req,res)=>{
     try{
-         if(req.user.role !== "superAdmin"){
-        return res.status(403).json({
-            msg:"Only super admin access"
-        })
-    }
      const {id} = req.params
      const hospital = await Hospital.findByIdAndDelete(id)
      console.log(hospital)
@@ -133,11 +119,7 @@ exports.deletehospital = async(req,res)=>{
 
 exports.hospitaladmin = async(req,res)=>{
 try {     
-    if (req.user.role !== "superAdmin") {
-        return res.status(403).json({
-        msg: "Only Super Admin Access"
-        });
-        }
+ 
     const { hospitalId } = req.query;
     if (hospitalId) {
       const admin = await HospitalAdmin.findOne({ hospitalId }).populate("hospitalId");

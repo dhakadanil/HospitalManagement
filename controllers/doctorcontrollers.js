@@ -39,11 +39,7 @@ if(doctorexist){
 }
 exports.alldoctor = async(req,res)=>{
     try{
-     if(req.user.role !== "AdminHospital"){
-        return res.status(403).json({
-            msg:"Only Admin Access"
-        })
-     }
+
      const doctor = await Doctor.find({hospitalId:req.user.hospitalId})
      if(doctor.length == 0){
         return res.status(404).json({
@@ -64,11 +60,7 @@ exports.alldoctor = async(req,res)=>{
 }
 exports.singledoctordetail = async(req,res)=>{
     try{
-        if(req.user.role !== "AdminHospital"){
-            return res.status(403).json({
-                msg:"Only Admin Access"
-            })
-        }
+   
         const {id} = req.params
    const doctor = await Doctor.findOne({
    _id:id,hospitalId:req.user.hospitalId})
@@ -90,11 +82,7 @@ exports.singledoctordetail = async(req,res)=>{
 }
 exports.editdoctor = async(req,res)=>{
     try{
-    if(req.user.role !== "AdminHospital"){
-        return res.status(403).json({
-            msg:"Only Admin Access"
-        })
-    }
+
     const {id} = req.params
     const doctors = await Doctor.findOne({_id:id,hospitalId:req.user.hospitalId})
     if(!doctors){
@@ -137,11 +125,7 @@ exports.editdoctor = async(req,res)=>{
 }
 exports.deletedoctor = async(req,res)=>{
     try{
-   if(req.user.role !== "AdminHospital"){
-    return res.status(403).json({
-        msg:"Only Admin Access"
-    })
-}
+
     const doctor = await Doctor.findOneAndDelete({
         _id:req.params.id,hospitalId:req.user.hospitalId})
    if(!doctor){
@@ -165,11 +149,7 @@ return res.status(200).json({
 // patient 
 exports.patientselecthospitalindoctor = async(req,res)=>{
     try{
-        if(req.user.role !== "Patient"){
-            return res.status(403).json({
-                msg:"Only Patient Access"
-            })
-        }
+      
      const {hospitalId} = req.params
      const doctors = await Doctor.find({hospitalId})
      if(doctors.length === 0){
@@ -192,11 +172,6 @@ exports.patientselecthospitalindoctor = async(req,res)=>{
 
 exports.searchDoctorsBySpecialization = async(req,res)=>{
     try{
-        if(req.user.role !== "Patient"){
-            return res.status(403).json({
-                msg:"Only Patient Access"
-            })
-        }
     const {specialization} = req.query
     const doctors = await Doctor.find({specialization:{$regex:`^${specialization}$`,$options: "i"}})
     if(doctors.length === 0){

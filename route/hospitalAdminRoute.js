@@ -8,16 +8,17 @@ Hospitaladminlogin,
 hospitalAdminprofile,
 deleteHospitalAdmin
 } = require("../controllers/admincontrollers");
-
+const {superAdmin} = require("../middleware/superadminMiddelware")
+const {AdminHospital} = require("../middleware/AdminHospitalMiddelware")
 const authmiddelware = require("../middleware/authmiddelware")
 const {adminLoginSchema} = require("../validations/adminLoginvalidation")
 const { verifyOtpSchema } = require("../validations/verifyOtpvalidation");
 const {hospitaladminregisterschema} = require("../validations/hospitaladminregistervalidation")
 
 
-router.post("/hospitalAdminregister",validate(hospitaladminregisterschema),authmiddelware,HospitalAdminRegister)
-router.post("/verify-otp",validate(verifyOtpSchema),HospitaladminVerifiOtp)
-router.post("/login",validate(adminLoginSchema),Hospitaladminlogin);
-router.get("/profile",authmiddelware,hospitalAdminprofile)
-router.delete("/delete-hospital-admin/:id",authmiddelware,deleteHospitalAdmin)
+router.post("/hospitalAdminregister",authmiddelware,superAdmin,validate(hospitaladminregisterschema),HospitalAdminRegister)
+router.post("/verify-otp",authmiddelware,superAdmin,validate(verifyOtpSchema),HospitaladminVerifiOtp)
+router.post("/login",authmiddelware,superAdmin,validate(adminLoginSchema),Hospitaladminlogin);
+router.get("/profile",authmiddelware,AdminHospital,hospitalAdminprofile)
+router.delete("/delete-hospital-admin/:id",authmiddelware,superAdmin,deleteHospitalAdmin)
 module.exports = router

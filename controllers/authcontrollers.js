@@ -181,11 +181,6 @@ exports.resetpassword = async(req,res)=>{
 }
 exports.profile = async(req,res)=>{
   try{
-  if(req.user.role !== "superAdmin"){
-    return res.status(403).json({
-      msg:"Only Super Admin Access"
-    })
-  }
   const {email} = req.user
   const profile = await SuperAdminModel.findOne({email})
   if(!profile){

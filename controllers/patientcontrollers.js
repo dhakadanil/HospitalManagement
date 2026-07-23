@@ -46,16 +46,22 @@ exports.login = async(req,res)=>{
     })
   }
 
-  const token = jwt.sign({
+  const accesstoken = jwt.sign({
     id:patient._id,
     email:patient.email,
     role:"Patient"
   },process.env.JWT_SECRET,{
-    expiresIn:"7d"
+    expiresIn:"10m"
   });
+const refreshtoken = jwt.sign({
+    id:patient._id,
+    email:patient.email,
+    role:"Patient",
+},process.env.REFRESH_SECRET,{expiresIn:"7d"})
  return res.status(200).json({
     message:true,
-    msg:"Login Successfull",token
+    msg:"Login Successfull",
+    accesstoken,refreshtoken
  })
     }catch(err){
         console.log(err)

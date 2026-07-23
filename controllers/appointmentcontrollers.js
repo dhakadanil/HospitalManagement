@@ -6,11 +6,7 @@ const sendappointmentMail = require("../utils/sendmailStatus")
 
 exports.appointmentBook = async(req,res)=>{
     try{
-        if(req.user.role !== "Patient"){
-            return res.status(403).json({
-                msg:"Only Patient Access"
-            })
-        }
+      
         const {doctorId} = req.params
         const {appointmentDate,appointmentTime,reason} = req.body
         const patientId = req.user.id
@@ -84,11 +80,7 @@ exports.appointmentBook = async(req,res)=>{
 // Patient appointment
 exports.myappointments = async(req,res)=>{
     try{
-        if(req.user.role !== "Patient"){
-            return res.status(403).json({
-                msg:"Only patient Access"
-            })
-        }
+    
     const myappointment = await Appointment.find({patientId:req.user.id})
     .populate("doctorId").populate("hospitalId");
     if(myappointment.length == 0){
@@ -111,11 +103,7 @@ exports.myappointments = async(req,res)=>{
 // only one doctor appointment and filter by status (AdminHospital)
 exports.allappointment = async(req,res)=>{
     try{
-        if(req.user.role !== "AdminHospital"){
-            return res.status(403).json({
-                msg:"Only Hospital Admin Access"
-            })
-        }
+    
    const doctorId = req.params.doctorId
    const {status} = req.query;
    if(!doctorId){
@@ -156,11 +144,6 @@ exports.allappointment = async(req,res)=>{
 }
 exports.appointmentupdatestatus = async(req,res)=>{
     try{
-        if(req.user.role !== "AdminHospital"){
-            return res.status(401).json({
-                msg:"Only Hospital Admin Access"
-            })
-        }
    const {appointmentId}=req.params
    const {status}=req.body
    const appointment = await Appointment.findOne({
@@ -187,8 +170,6 @@ exports.appointmentupdatestatus = async(req,res)=>{
         msg:"Patient not Found"
     })
    }
-   console.log("Patient:", patient);
-console.log("Patient Email:", patient.email);
    appointment.status = status  
    await appointment.save()
    
@@ -213,11 +194,7 @@ console.log("Patient Email:", patient.email);
 
 exports.appointmentDetail = async(req,res)=>{
     try{
-        if(req.user.role !== "AdminHospital"){
-            return res.status(400).json({
-                msg:"Only Admin Access"
-            })
-        }
+     
     const {appointmentId} = req.params
     const appointment = await Appointment.findOne({
         _id:appointmentId,hospitalId:req.user.hospitalId})
@@ -244,11 +221,7 @@ exports.appointmentDetail = async(req,res)=>{
 // Hospital ki sabhi appointment dikhana and filter by status
 exports.allappointmentstatus = async(req,res)=>{
     try{
-        if(req.user.role !== "AdminHospital"){
-            return res.status(403).json({
-                msg:"Only Hospital Admin Access"
-            })
-        }
+     
    const {hospitalId} = req.user
    const{status} = req.query
    const filter={hospitalId}
@@ -280,11 +253,7 @@ exports.allappointmentstatus = async(req,res)=>{
 
 exports.todayappointment = async(req,res)=>{
     try{
-    if(req.user.role !== "AdminHospital"){
-        return res.status(403).json({
-            msg:"Only Hospital Admin Access"
-        })
-    }
+ 
     const todayDate = new Date().toISOString().split("T")[0];
     console.log(todayDate)
     const appointments = await Appointment.find({
@@ -312,11 +281,7 @@ exports.todayappointment = async(req,res)=>{
 
 exports.searchappointmentByDate = async(req,res)=>{
     try{
-   if(req.user.role !== "AdminHospital"){
-    return res.status(403).json({
-        msg:"Only Hospital Admin Access"
-    })
-   }
+
    const {hospitalId}= req.user
    const {date ,startDate,endDate,status} = req.query;
   const allowstatus = ["Pending","Approved","Completed","Cancel"]
@@ -379,11 +344,7 @@ if(startDate && endDate && startDate > endDate){
 
 exports.cancelappointment = async(req,res)=>{
   try{
-  if(req.user.role !== "Patient"){
-    return res.status(403).json({
-        msg:"Only Patient Access"
-    })
-  }
+
   const {appointmentId} =req.params
   const patientId = req.user.id
   const appointment = await Appointment.findOne({_id:appointmentId,patientId})

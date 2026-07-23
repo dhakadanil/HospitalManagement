@@ -29,6 +29,9 @@ const AdminSchema = new mongoose.Schema({
         type:String,
         default:"AdminHospital"
     },
+   refreshToken:{
+     type: String 
+    }, 
     hospitalId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Hospital",

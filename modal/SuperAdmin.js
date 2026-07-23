@@ -25,7 +25,8 @@ const SuperadminSchema = new mongoose.Schema({
   type: String,
   unique:true,
   default: "superAdmin"
-}
+},
+  refreshToken: { type: String } 
 
 },{timestamps:true}
 );

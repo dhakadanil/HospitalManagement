@@ -34,9 +34,13 @@ const authmiddelware = async(req,res,next)=>{
      console.log(req.user);
      next()
 }catch(err){
-    console.log("invalid tokan")
+    if(err.name === "TokenExpiredError"){
     return res.status(401).json({
-        msg:"Invalid Tokan"
+        msg:"Token Expired"
+    })
+    };
+    return res.status(401).json({
+        msg:"Invalid token"
     })
 }
 }
