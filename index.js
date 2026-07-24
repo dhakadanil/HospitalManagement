@@ -2,9 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
+const cookieParser = require("cookie-parser")
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
-
+app.use(cookieParser())
 const authRoutes = require("./route/authRoute");
 const hospitalRoute = require("./route/hospitalRoute")
 const hospitalAdminRoute = require("./route/hospitalAdminRoute")

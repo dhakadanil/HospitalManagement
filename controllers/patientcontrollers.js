@@ -2,7 +2,6 @@ const Patient = require("../modal/Patient");
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const sendMail = require("../utils/sendMail")
-
 exports.register = async(req,res)=>{
     try{
   const { name,email ,password,phone ,dateOfBirth,gender} = req.body
@@ -51,13 +50,18 @@ exports.login = async(req,res)=>{
     email:patient.email,
     role:"Patient"
   },process.env.JWT_SECRET,{
-    expiresIn:"10m"
+    expiresIn:"3m"
   });
 const refreshtoken = jwt.sign({
     id:patient._id,
     email:patient.email,
     role:"Patient",
-},process.env.REFRESH_SECRET,{expiresIn:"7d"})
+},process.env.REFRESH_SECRET,{expiresIn:"10d"})
+res.cookie("refreshToken",refreshtoken,{
+    httpOnly:true,
+    secure:false,
+    sameSite:"strict"
+}); 
  return res.status(200).json({
     message:true,
     msg:"Login Successfull",

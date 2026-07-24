@@ -11,6 +11,8 @@ forgotpassword,
 VerifyOtp,
 resetpassword
 } = require("../controllers/patientcontrollers")
+const {refreshMyToken } = require("../middleware/refreshtokenMiddelware")
+const {logout} = require("../controllers/logoutControllers")
 const authmiddelware = require("../middleware/authmiddelware")
 const {rolepatient} = require("../middleware/PatientMiddelware")
 const {patientSchema} = require("../validations/patientvalidation")
@@ -26,4 +28,6 @@ router.put("/updateprofile",authmiddelware,rolepatient,validate(patienteditSchem
 router.post("/forgotpassword",validate(forgotPasswordSchema),forgotpassword)
 router.post("/verify-otp",validate(verifyOtpSchema),VerifyOtp)
 router.post("/resetpassword",validate(resetPasswordSchema),resetpassword)
+router.post("/logout",authmiddelware ,logout);
+router.post("/refresh-token", refreshMyToken);
 module.exports = router

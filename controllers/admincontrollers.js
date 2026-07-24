@@ -124,7 +124,7 @@ exports.Hospitaladminlogin = async (req,res)=>{
             msg:"Wrong Password"
         })
     }
-    const token = jwt.sign({
+    const AccessToken = jwt.sign({
     id:hospitaladmin._id,
     email:hospitaladmin.email,
     role:hospitaladmin.role,
@@ -132,8 +132,23 @@ exports.Hospitaladminlogin = async (req,res)=>{
 },process.env.JWT_SECRET,{
     expiresIn:"1d"
 });
+const refreshtoken = jwt.sign({
+     id:hospitaladmin._id,
+    email:hospitaladmin.email,
+    role:hospitaladmin.role,
+    hospitalId:hospitaladmin.hospitalId
+},process.env.JWT_SECRET,{
+    expiresIn:"10d"
+});
+ res.cookie("refreshToken",refreshtoken,{
+    httpOnly:true,
+    secure:false,
+    sameSite:"strict"
+ });
  return res.status(200).json({
-        msg:"Admin Login Successfull",token:token
+        msg:"Admin Login Successfull",
+        AccessToken:AccessToken,
+        RefreshToken:refreshtoken
     })
 }catch(err){
     console.log(err)

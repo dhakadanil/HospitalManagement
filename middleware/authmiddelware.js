@@ -32,6 +32,7 @@ const authmiddelware = async(req,res,next)=>{
     }
      req.user = tokendata;
      console.log(req.user);
+
      next()
 }catch(err){
     if(err.name === "TokenExpiredError"){

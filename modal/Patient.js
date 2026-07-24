@@ -11,7 +11,6 @@ const patientSchema  = new mongoose.Schema({
         type:String
     },
     dateOfBirth:{
-        type:Date,
         type:Number
     },
     otp:{

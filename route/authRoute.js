@@ -12,7 +12,8 @@ const {
     profile,
     resendOtp
 } = require("../controllers/authcontrollers")
-const {refreshMyTokenMiddleware } = require("../middleware/refreshtokenMiddelware")
+const {logout} = require("../controllers/logoutControllers")
+const {refreshMyToken} = require("../middleware/refreshtokenMiddelware")
 const {superAdmin} = require("../middleware/superadminMiddelware")
 const {adminRegisterSchema} = require("../validations/adminRegistervalidation")
 const {adminLoginSchema} = require("../validations/adminLoginvalidation");
@@ -30,6 +31,8 @@ router.post("/forgotpassword",validate(forgotPasswordSchema),forgotpassword)
 router.post("/reset-password",validate(resetPasswordSchema),resetpassword)
 router.get("/profile",authmiddelware,superAdmin,profile)
 router.post("/resend-Otp",validate(resendOtpSchema),resendOtp)
+router.post("/logout",authmiddelware ,logout);
 
-router.post("/refresh-token", refreshMyTokenMiddleware);
+router.post("/refresh-token", refreshMyToken);
+
 module.exports = router

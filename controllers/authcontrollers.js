@@ -60,17 +60,31 @@ exports.SuperAdminlogin = async(req,res)=>{
     msg:"Wrong Password"
   })
   }
-const token = jwt.sign({
+const AccessToken = jwt.sign({
     id:superadmin._id,
     email:superadmin.email,
     role:superadmin.role
    },process.env.JWT_SECRET,{
     expiresIn:"1d"
    });
+   const refreshtoken = jwt.sign({
+    id:superadmin._id,
+    email:superadmin.email,
+    role:superadmin.role
+   },process.env.JWT_SECRET,{
+    expiresIn:"10d"
+   });
+
+   res.cookie("refreshToken",refreshtoken,{
+    httpOnly:true,
+    secure:false,
+    sameSite:"strict"
+   })
 return res.status(200).json({
     msg:"Login Successfull",
-        token: token
-});
+    AccessToken: AccessToken,
+    Refreshtoken:refreshtoken
+  });
 
   }catch(err){
     console.log(err)
